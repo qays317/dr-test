@@ -32,11 +32,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install git+https://github.com/QaysAlnajjad/dr-tool.git
 
-      # Optional: إذا عندك script جاهز يولد config
-      - name: Generate DR config
-        run: |
-          ./scripts/generate-dr-config.sh config.yaml dr-config.yaml
-
       # Optional: إذا تريد جلب image URIs من runtime
       - name: Load image URIs
         run: |
