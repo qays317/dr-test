@@ -132,6 +132,8 @@ Covers:
 - ECS scale-up in DR region
 - S3 media uploads (in DR region)
 
+*For operational procedures, see DR-RUNBOOK.md
+
 ---
 
 > ℹ️ **Post-Demo Improvement Note**
