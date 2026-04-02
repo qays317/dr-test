@@ -18,6 +18,7 @@ All infrastructure is 100% managed using **Terraform**, following AWS **Well-Arc
 - [Architecture Overview](#architecture-overview)
 - [Demo Videos](#demo-videos)
 - [Key Features](#key-features)
+- [Engineering Decisions](#engineering-decisions)
 - [Design Principles](#design-principles)
 - [Technology Stack](#technology-stack)
 - [Infrastructure Components](#infrastructure-components)
@@ -189,6 +190,40 @@ Covers:
 * Modular structure
 * Remote state per environment
 * Zero manual configuration
+
+---
+
+# **Engineering Decisions**
+
+### Disaster Recovery Strategy
+
+Decision:
+Adopted a Warm Standby model instead of active-active or fully automated failover
+
+Reason:
+To maintain control over stateful components and avoid unsafe automatic recovery
+
+Trade-off:
+Slower recovery time vs improved reliability and predictability
+
+### Database Failover
+
+Decision:
+Manual promotion of cross-region read replica
+
+Reason:
+Avoid potential data inconsistency and uncontrolled failover scenarios
+
+Trade-off:
+Requires operator intervention during incidents
+
+### Networking Isolation
+
+Decision:
+Deploy fully isolated VPCs per region
+
+Reason:
+Prevent cross-region blast radius and ensure true regional independence
 
 ---
 
