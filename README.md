@@ -23,9 +23,10 @@ All infrastructure is 100% managed using **Terraform**, following AWS **Well-Arc
 - [Technology Stack](#technology-stack)
 - [Infrastructure Components](#infrastructure-components)
 - [Failover Strategy](#failover-strategy)
+- [Failure Scenarios & Recovery](#failure-scenarios--recovery)
 - [Terraform Structure](#terraform-structure)
+- [](#)
 - [Reviewer Setup (How to Deploy This Project in Your AWS Account)](#reviewer-setup-how-to-deploy-this-project-in-your-aws-account-)
-- [DR Failover Guide](#dr-failover-guide)
 - [CloudWatch Monitoring and Alarms](#cloudwatch-monitoring-and-alarms)
 - [Security Best Practices Used](#security-best-practices-used)
 - [Cost Optimization](#cost-optimization)
@@ -202,6 +203,9 @@ Adopted a Warm Standby model instead of active-active or fully automated failove
 
 Reason:
 To maintain control over stateful components and avoid unsafe automatic recovery
+
+Why not Active-Active:
+Active-active introduces complexity in database consistency and conflict resolution
 
 Trade-off:
 Slower recovery time vs improved reliability and predictability
@@ -404,6 +408,47 @@ This architecture follows AWS Warm Standby DR pattern — a cost-efficient model
 
 ---
 
+# **Failure Scenarios & Recovery**
+
+This section describes how the system behaves under real failure conditions.
+
+### 🌍 Full Region Failure (Primary Down)
+
+- CloudFront automatically routes traffic to DR ALB
+- S3 failover ensures media availability
+- ECS service in DR must be scaled up manually
+- RDS read replica must be promoted
+
+Result:
+✔ Application remains available with minimal downtime
+
+---
+
+### 🗄️ Database Failure Only
+
+- Application becomes partially unavailable (WordPress errors)
+- Manual promotion of DR replica is required
+
+---
+
+### 📦 S3 Failure
+
+- CloudFront automatically switches to DR bucket
+- No data loss due to cross-region replication
+
+---
+
+### ⚠️ Partial Failures (ALB / ECS / Network)
+
+- CloudFront detects unhealthy origin (5xx / timeout)
+- Automatically fails over to DR ALB
+
+---
+
+This reflects a controlled disaster recovery model where critical stateful operations remain under operator control.
+
+---
+
 # **Terraform Structure**
 
 ```bash
@@ -448,6 +493,30 @@ aws-disaster-recovery/
         └── dr-ecr-image-uri   
 ```
 This structure prevents dependency cycles and allows independent region deployments.
+
+---
+
+# **CI/CD Strategy**
+
+Infrastructure deployment is fully automated using GitHub Actions with OpenID Connect (OIDC).
+
+### Key Characteristics
+
+  - No static AWS credentials are used
+  - GitHub Actions assumes IAM role dynamically
+  - Terraform is executed in a controlled pipeline
+  - Deploy and destroy workflows are separated
+
+### Deployment Flow
+
+  1. Developer triggers workflow manually
+  2. GitHub Actions authenticates to AWS using OIDC
+  3. Terraform applies infrastructure across:
+     - Primary region
+     - DR region
+     - Global services (CloudFront, Route53)
+
+This approach ensures secure, repeatable, and production-grade infrastructure delivery.
 
 ---
 
@@ -673,23 +742,6 @@ This destroys resources in the correct dependency order:
 * Remove runtime state
 
 This ensures a clean teardown with no orphaned resources.
-
----
-
-# **DR Failover Guide**
-
-### Automatic:
-
-✔ CloudFront routes traffic to DR ALB
-✔ S3 read failover
-✔ WordPress stays online
-
-### Manual:
-
-1. Promote DR RDS replica
-2. Scale ECS tasks in DR region
-3. Update S3 write origin (only if primary S3 is down)
-4. Post-incident: re-establish replication. After the primary region is restored, the old primary RDS instance must be replaced and a new cross-region read replica must be created to re-establish multi-region replication.
 
 ---
 
