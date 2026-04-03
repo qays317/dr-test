@@ -1,4 +1,4 @@
-# 🚀 AWS Multi-Region WordPress Disaster Recovery Architecture
+# 🚀 AWS Multi-Region Disaster Recovery Platform (Terraform)
 
 
 [![Deploy Multi-Region Infrastructure](https://github.com/QaysAlnajjad/aws-multi-region-wordpress-dr/actions/workflows/deploy.yml/badge.svg)](https://github.com/QaysAlnajjad/aws-multi-region-wordpress-dr/actions/workflows/deploy.yml)
