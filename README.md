@@ -6,8 +6,6 @@
 [![Destroy Multi-Region Infrastructure](https://github.com/QaysAlnajjad/aws-multi-region-wordpress-dr/actions/workflows/destroy.yml/badge.svg)](https://github.com/QaysAlnajjad/aws-multi-region-wordpress-dr/actions/workflows/destroy.yml)
 
 
-**Production-Grade • Highly Available • Fault-Tolerant • Terraform & AWS**
-
 This repository delivers a **real-world enterprise disaster recovery design** for running WordPress across **two AWS regions** using a fully automated, highly available, self-healing architecture.
 This project focuses not only on infrastructure provisioning, but on demonstrating real-world disaster recovery engineering, operational decision-making, and production trade-offs.
 
