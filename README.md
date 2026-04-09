@@ -6,9 +6,7 @@
 [![Destroy Multi-Region Infrastructure](https://github.com/QaysAlnajjad/aws-multi-region-wordpress-dr/actions/workflows/destroy.yml/badge.svg)](https://github.com/QaysAlnajjad/aws-multi-region-wordpress-dr/actions/workflows/destroy.yml)
 
 
-This repository delivers a **real-world enterprise disaster recovery design** for running WordPress across **two AWS regions** using a fully automated, highly available, self-healing architecture.
-This project focuses not only on infrastructure provisioning, but on demonstrating real-world disaster recovery engineering, operational decision-making, and production trade-offs.
-
+This project demonstrates a production-inspired AWS multi-region disaster recovery platform using a warm standby strategy. It combines infrastructure-as-code, controlled failover design, and clear operational trade-offs for ECS, RDS, S3, CloudFront, and Route 53.
 All infrastructure is 100% managed using **Terraform**, following AWS **Well-Architected best practices**.
 
 ---
@@ -43,7 +41,7 @@ This project demonstrates:
   - Making trade-offs between cost, complexity, and reliability
   - Implementing secure CI/CD with OIDC
   - Building production-ready infrastructure using Terraform
-  - Understanding failure scenarios and controlled recovery strategies
+  - Understanding ure scenarios and controlled recovery strategies
 
 ---
 
@@ -57,7 +55,7 @@ This project deploys a multi-region, production-grade WordPress platform using:
 * **Containers:** ECS Fargate (Primary active, DR scaled to 0)
 * **Database:** RDS MySQL with cross-region read-replica
 * **Media Storage:** S3 with cross-region replication
-* **Origin Failover:** CloudFront automatically fails over to DR ALB & DR S3
+* **Origin over:** CloudFront automatically s over to DR ALB & DR S3
 --- 
 
 ## Multi-Region Architecture (ASCII Diagram)
@@ -69,7 +67,7 @@ This project deploys a multi-region, production-grade WordPress platform using:
                                            │
                             ┌──────────────▼────────────────┐
                             │      CloudFront (Global)      │
-                            │  Origin Groups (Auto Failover)│
+                            │  Origin Groups (Auto over)│
                             └───────────┬───────────┬───────┘
                                         │           │
                                       App         Media
@@ -356,6 +354,8 @@ Media failover is 100% automatic - no operator intervention needed.
 
 # **Failover Strategy**
 
+Edge and media failover are automated through CloudFront origin groups, while stateful recovery remains controlled through ECS scale-up, RDS replica promotion, validation, and optional orchestration. This design intentionally prioritizes predictability and operational safety over aggressive auto-failover.
+
 ## **1. Application Failover (Fully Automatic)**
 
 CloudFront Origin Group:
@@ -370,8 +370,6 @@ Triggers failover on:
 * Timeout
 * ALB unreachable
 * Security group or NACL issues
-
-**Users experience zero downtime**.
 
 ---
 
