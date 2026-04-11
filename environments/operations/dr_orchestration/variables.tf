@@ -13,7 +13,7 @@ variable "environment" {
 variable "aws_region" {
   description = "Region where orchestration resources will be created"
   type        = string
-  default = eu-central-1
+  default = "eu-central-1"
 }
 
 variable "primary_region" {
