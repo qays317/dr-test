@@ -66,6 +66,7 @@ variable "db_connect_timeout" {
 variable "app_healthcheck_url" {
   description = "Direct DR application healthcheck URL"
   type        = string
+  default = "/"
 }
 
 variable "app_healthcheck_timeout" {
