@@ -64,11 +64,54 @@ terraform -chdir="environments/primary/network_rds" destroy \
   -target=null_resource.tag_rds_master_secret \
   -auto-approve || true
 
-#destroy_stack "dr/ecs"
-#destroy_stack "primary/ecs"
+destroy_stack "dr/ecs"
+destroy_stack "primary/ecs"
 
 
-#destroy_stack "global/cdn_dns"
+
+# Destroying primary ECR repository
+echo "🗑️  Cleaning up primary ECR repository..."
+if aws ecr describe-repositories \
+    --repository-names "$ECR_REPO_NAME" \
+    --region "$PRIMARY_REGION" >/dev/null 2>&1; then
+
+  echo "Deleting primary ECR repository: $ECR_REPO_NAME"
+
+  aws ecr delete-repository \
+    --repository-name "$ECR_REPO_NAME" \
+    --region "$PRIMARY_REGION" \
+    --force || true
+
+else
+  echo "Primary ECR repository does not exist — skipping."
+fi
+# Destroying DR ECR repository
+echo "🗑️  Cleaning up DR ECR repository..."
+if aws ecr describe-repositories \
+    --repository-names "$ECR_REPO_NAME" \
+    --region "$DR_REGION" >/dev/null 2>&1; then
+
+  echo "Deleting DR ECR repository: $ECR_REPO_NAME"
+
+  aws ecr delete-repository \
+    --repository-name "$ECR_REPO_NAME" \
+    --region "$DR_REGION" \
+    --force || true
+
+else
+  echo "DR ECR repository does not exist — skipping."
+fi
+
+
+
+if [[ -d "${RUNTIME_DIR}" ]]; then
+    echo "Removing runtime directory..."
+    rm -rf "${RUNTIME_DIR}" || true
+else
+    echo "Runtime directory does not exist — nothing to remove."
+fi
+
+destroy_stack "global/cdn_dns"
 destroy_stack "dr/alb"
 destroy_stack "dr/s3"
 destroy_stack "dr/read_replica_rds"
