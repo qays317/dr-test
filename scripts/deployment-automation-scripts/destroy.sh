@@ -4,12 +4,12 @@ set -e
 
 # Load shared configuration
 source "$(dirname "$0")/config.sh"
-source "$(dirname "$0")/stacks_config.sh" 
+source "$(dirname "$0")/stacks_config.sh"
 
 if [ -z "$TF_STATE_BUCKET_NAME" ]; then
-    echo "❌ ERROR: TF_STATE_BUCKET_NAME variable is required"
-    echo "Set TF_STATE_BUCKET_NAME in config.sh"
-    exit 1
+  echo "❌ ERROR: TF_STATE_BUCKET_NAME variable is required"
+  echo "Set TF_STATE_BUCKET_NAME in config.sh"
+  exit 1
 fi
 
 echo "🔥 Starting AWS ECS WordPress Infrastructure Destruction..."
@@ -34,16 +34,25 @@ echo "🔥 Destroying resources in reverse order..."
 echo ""
 
 # -----------------------------
+# Function to init a stack
+# -----------------------------
+init_stack() {
+  local stack="$1"
+
+  terraform -chdir="environments/$stack" init -reconfigure \
+    -backend-config="bucket=$TF_STATE_BUCKET_NAME" \
+    -backend-config="key=environments/$stack/terraform.tfstate" \
+    -backend-config="region=$TF_STATE_BUCKET_REGION"
+}
+
+# -----------------------------
 # Function to destroy a stack
 # -----------------------------
 destroy_stack() {
   local stack="$1"
   echo "🟦 Destroying: $stack"
 
-  terraform -chdir="environments/$stack" init -reconfigure \
-    -backend-config="bucket=$TF_STATE_BUCKET_NAME" \
-    -backend-config="key=environments/$stack/terraform.tfstate" \
-    -backend-config="region=$TF_STATE_BUCKET_REGION"
+  init_stack "$stack"
 
   terraform -chdir="environments/$stack" destroy \
     ${STACK_VARS[$stack]} \
@@ -57,20 +66,22 @@ destroy_stack() {
 # -----------------------------
 
 echo "🧹 Removing DB bootstrap Lambda to shorten teardown time..."
-terraform -chdir="environments/primary/network_rds" init -reconfigure \
-    -backend-config="bucket=$TF_STATE_BUCKET_NAME" \
-    -backend-config="region=$TF_STATE_BUCKET_REGION" \
-    -backend-config="key=environments/primary/network_rds/terraform.tfstate" \
+init_stack "primary/network_rds"
 
 terraform -chdir="environments/primary/network_rds" destroy \
+  ${STACK_VARS["primary/network_rds"]} \
   -target=aws_lambda_function.lambda \
   -target=aws_cloudwatch_log_group.lambda_logs \
   -target=null_resource.invoke_lambda_after_creation \
   -target=null_resource.tag_rds_master_secret \
   -auto-approve || true
 
+# Need init before reading outputs from a stack that uses remote backend
+init_stack "primary/ecs"
+
 ECS_CLUSTER_NAME=$(terraform -chdir="environments/primary/ecs" output -raw ecs_cluster_name)
 ECS_SERVICE_NAME="wordpress-service"
+
 STACK_VARS["operations/dr_orchestration"]+=" \
   -var ecs_cluster_name=$ECS_CLUSTER_NAME \
   -var ecs_service_name=$ECS_SERVICE_NAME"
@@ -80,13 +91,11 @@ destroy_stack "operations/dr_orchestration"
 destroy_stack "dr/ecs"
 destroy_stack "primary/ecs"
 
-
-
-# Destroying primary ECR repository
+# Destroy primary ECR repository
 echo "🗑️  Cleaning up primary ECR repository..."
 if aws ecr describe-repositories \
-    --repository-names "$ECR_REPO_NAME" \
-    --region "$PRIMARY_REGION" >/dev/null 2>&1; then
+  --repository-names "$ECR_REPO_NAME" \
+  --region "$PRIMARY_REGION" >/dev/null 2>&1; then
 
   echo "Deleting primary ECR repository: $ECR_REPO_NAME"
 
@@ -94,15 +103,15 @@ if aws ecr describe-repositories \
     --repository-name "$ECR_REPO_NAME" \
     --region "$PRIMARY_REGION" \
     --force || true
-
 else
   echo "Primary ECR repository does not exist — skipping."
 fi
-# Destroying DR ECR repository
+
+# Destroy DR ECR repository
 echo "🗑️  Cleaning up DR ECR repository..."
 if aws ecr describe-repositories \
-    --repository-names "$ECR_REPO_NAME" \
-    --region "$DR_REGION" >/dev/null 2>&1; then
+  --repository-names "$ECR_REPO_NAME" \
+  --region "$DR_REGION" >/dev/null 2>&1; then
 
   echo "Deleting DR ECR repository: $ECR_REPO_NAME"
 
@@ -110,18 +119,15 @@ if aws ecr describe-repositories \
     --repository-name "$ECR_REPO_NAME" \
     --region "$DR_REGION" \
     --force || true
-
 else
   echo "DR ECR repository does not exist — skipping."
 fi
 
-
-
-if [[ -d "${RUNTIME_DIR}" ]]; then
-    echo "Removing runtime directory..."
-    rm -rf "${RUNTIME_DIR}" || true
+if [[ -n "${RUNTIME_DIR:-}" && -d "${RUNTIME_DIR}" ]]; then
+  echo "Removing runtime directory..."
+  rm -rf "${RUNTIME_DIR}" || true
 else
-    echo "Runtime directory does not exist — nothing to remove."
+  echo "Runtime directory does not exist — nothing to remove."
 fi
 
 destroy_stack "global/cdn_dns"
