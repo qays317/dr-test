@@ -64,6 +64,12 @@ terraform -chdir="environments/primary/network_rds" destroy \
   -target=null_resource.tag_rds_master_secret \
   -auto-approve || true
 
+ECS_CLUSTER_NAME=$(terraform -chdir="environments/primary/ecs" output -raw ecs_cluster_name)
+ECS_SERVICE_NAME="wordpress-service"
+STACK_VARS["operations/dr_orchestration"]+=" \
+  -var ecs_cluster_name=$ECS_CLUSTER_NAME \
+  -var ecs_service_name=$ECS_SERVICE_NAME"
+
 destroy_stack "operations/dr_orchestration"
 
 destroy_stack "dr/ecs"
