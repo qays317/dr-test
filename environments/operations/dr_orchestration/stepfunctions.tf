@@ -12,14 +12,14 @@ resource "aws_sfn_state_machine" "dr_failover_orchestrator" {
   definition = templatefile(
     "${local.stepfunction_base}/dr-failover-orchestrator.asl.json",
     {
-      recheck_incident_lambda_arn        = aws_lambda_function.main["recheck_incident"].arn
-      check_replica_readiness_lambda_arn = aws_lambda_function.main["check_replica_readiness"].arn
-      promote_replica_lambda_arn         = aws_lambda_function.main["promote_replica"].arn
-      check_db_available_lambda_arn      = aws_lambda_function.main["check_db_available"].arn
-      validate_db_writable_lambda_arn    = aws_lambda_function.main["validate_db_writable"].arn
-      scaleup_dr_service_lambda_arn      = aws_lambda_function.main["scaleup_dr_service"].arn
-      check_ecs_healthy_lambda_arn       = aws_lambda_function.main["check_ecs_healthy"].arn
-      validate_application_lambda_arn    = aws_lambda_function.main["validate_application"].arn
+      recheck_incident_lambda_arn        = aws_lambda_function.main["recheck-incident"].arn
+      check_replica_readiness_lambda_arn = aws_lambda_function.main["check-replica-readiness"].arn
+      promote_replica_lambda_arn         = aws_lambda_function.main["promote-replica"].arn
+      check_db_available_lambda_arn      = aws_lambda_function.main["check-db-available"].arn
+      validate_db_writable_lambda_arn    = aws_lambda_function.main["validate-db-writable"].arn
+      scaleup_dr_service_lambda_arn      = aws_lambda_function.main["scaleup-dr-service"].arn
+      check_ecs_healthy_lambda_arn       = aws_lambda_function.main["check-ecs-healthy"].arn
+      validate_application_lambda_arn    = aws_lambda_function.main["validate-application"].arn
     }
   )
 
