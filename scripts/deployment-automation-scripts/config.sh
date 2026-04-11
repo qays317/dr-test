@@ -38,6 +38,6 @@ CERTIFICATE_SANs='["*.rqays.com"]'
 ############################################
 #  SSL certificates
 ############################################
-PRIMARY_ALB_SSL_CERTIFICATE_ARN="arn:aws:acm:us-east-1:156166604445:certificate/e57118e4-0665-4aa7-8f85-5ba58214eb68"
+PRIMARY_ALB_SSL_CERTIFICATE_ARN="arn:aws:acm:us-east-1:156166604445:certificate/c25ddc27-70aa-4b53-a2a1-61d9ea6dd91c"
 DR_ALB_SSL_CERTIFICATE_ARN=""
-CLOUDFRONT_SSL_CERTIFICATE_ARN="arn:aws:acm:us-east-1:156166604445:certificate/e57118e4-0665-4aa7-8f85-5ba58214eb68"
+CLOUDFRONT_SSL_CERTIFICATE_ARN="arn:aws:acm:us-east-1:156166604445:certificate/c25ddc27-70aa-4b53-a2a1-61d9ea6dd91c"
