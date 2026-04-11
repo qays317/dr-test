@@ -7,33 +7,33 @@ output "state_machine_arn" {
 }
 
 output "recheck_incident_lambda_arn" {
-  value = aws_lambda_function.main["recheck_incident"].arn
+  value = aws_lambda_function.main["recheck-incident"].arn
 }
 
 output "check_replica_readiness_lambda_arn" {
-  value = aws_lambda_function.main["check_replica_readiness"].arn
+  value = aws_lambda_function.main["check-replica-readiness"].arn
 }
 
 output "promote_replica_lambda_arn" {
-  value = aws_lambda_function.main["promote_replica"].arn
+  value = aws_lambda_function.main["promote-replica"].arn
 }
 
 output "check_db_available_lambda_arn" {
-  value = aws_lambda_function.main["check_db_available"].arn
+  value = aws_lambda_function.main["check-db-available"].arn
 }
 
 output "validate_db_writable_lambda_arn" {
-  value = aws_lambda_function.main["validate_db_writable"].arn
+  value = aws_lambda_function.main["validate-db-writable"].arn
 }
 
 output "scaleup_dr_service_lambda_arn" {
-  value = aws_lambda_function.main["scaleup_dr_service"].arn
+  value = aws_lambda_function.main["scaleup-dr-service"].arn
 }
 
 output "check_ecs_healthy_lambda_arn" {
-  value = aws_lambda_function.main["check_ecs_healthy"].arn
+  value = aws_lambda_function.main["check-ecs-healthy"].arn
 }
 
 output "validate_application_lambda_arn" {
-  value = aws_lambda_function.main["validate_application"].arn
+  value = aws_lambda_function.main["validate-application"].arn
 }
