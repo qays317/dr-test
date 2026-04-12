@@ -27,7 +27,6 @@ data "aws_region" "current" {}
 
 locals {
   container_definitions = {
-    for k, v in var.ecs_task_definition : k => jsonencode([{
       name = "wordpress-container"
       image = var.ecr_image_uri
       portMappings = [{ containerPort = 80, protocol = "tcp" }]
@@ -82,33 +81,30 @@ locals {
           "awslogs-stream-prefix" = "ecs"
         }
       }
-    }])
   }
 }
 
-resource "aws_ecs_task_definition" "main" {
-  for_each = var.ecs_task_definition
-    family = each.value.family
+resource "aws_ecs_task_definition" "wordpress" {
+    family = var.ecs_task_definition.family
     network_mode = "awsvpc"
     requires_compatibilities = ["FARGATE"]
-    cpu = each.value.cpu
-    memory = each.value.memory
+    cpu = var.ecs_task_definition.cpu
+    memory = var.ecs_task_definition.memory
     execution_role_arn = var.ecs_execution_role_arn
     task_role_arn = var.ecs_task_role_arn
     container_definitions = local.container_definitions[each.key]
     tags = { 
-      Name = each.key
+      Name = var.ecs_task_definition.name
       project = "wordpress"
       principal = "ecs"
     }
 }
 
-resource "aws_ecs_service" "main" {
-  for_each = var.ecs_service
-    name = each.key
+resource "aws_ecs_service" "wordpress" {
+    name = var.ecs_service.name
     cluster = aws_ecs_cluster.wordpress.id
-    task_definition = aws_ecs_task_definition.main[each.value.task_definition].arn
-    desired_count = each.value.desired_count
+    task_definition = aws_ecs_task_definition.wordpress.arn
+    desired_count = var.ecs_service.desired_count
     launch_type = "FARGATE"
     enable_execute_command = true
     propagate_tags = "SERVICE"
@@ -119,7 +115,7 @@ resource "aws_ecs_service" "main" {
 
     network_configuration {
       subnets = var.private_subnets_ids
-      security_groups = [var.security_groups[each.value.network_configuration.security_group_name]]
+      security_groups = [var.security_groups[var.ecs_service.network_configuration.security_group_name]]
       assign_public_ip = false
     }
 
