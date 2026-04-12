@@ -31,8 +31,6 @@ ecs_security_group_config = {
 
 ecr_image_uri = ""
 
-ecs_cluster_name_config = "wordpress-cluster"
-
 ecs_task_definition_config = {
     family = "wordpress-task"
     cpu = "1024"
