@@ -8,13 +8,4 @@ ecs_task_definition_config = {
     memory = "2048"
 }
 
-ecs_service_config = {
-    desired_count = 0
-    network_configuration = {
-        security_group_name = "wordpress-service-SG"
-    }
-}
-
-
-
-
+ecs_task_desired_count = number
