@@ -29,22 +29,23 @@ variable "ecs_cluster_name_config" {
 }
 
 variable "ecs_task_definition_config" {
-  type = map(object({
+  type = object({
+    name = string
     family = string
     cpu = string
     memory = string
-  }))
+    rds_name = string
+  })
 }
 
 variable "ecs_service_config" {
-  type = map(object({
-    cluster = string
-    task_definition = string
+  type = object({
+    name = string
     desired_count = number
     network_configuration = object({
       security_group_name = string
     })
-  }))
+  })
 }
 
 variable "vpc_endpoints_config" {
