@@ -172,10 +172,9 @@ resource "aws_vpc_endpoint" "main" {
 
 # CloudWatch Log Group for ECS tasks
 resource "aws_cloudwatch_log_group" "ecs_logs" {
-  for_each = var.ecs_task_definition
-    name = "/ecs/${each.value.family}"
+    name = "/ecs/${var.ecs_task_definition.family}"
     retention_in_days = 7
-    tags = { Name = "${each.key}-logs" }
+    tags = { Name = "${var.ecs_task_definition.name}-logs" }
   }
 
 
