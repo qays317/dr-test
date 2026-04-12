@@ -29,6 +29,20 @@ ecs_security_group_config = {
     }
 }
 
+ecs_service_sg_name = "wordpress-service-SG"
 
+vpc_endpoints_config = {
+    "logs" = "Interface",
+    "s3" = "Gateway", 
+    "ecs" = "Interface",
+    "sts" = "Interface",
+    "monitoring" = "Interface",
+    "ecr.api" = "Interface",
+    "ecr.dkr" = "Interface",
+    "ssmmessages" = "Interface",
+    "ssm" = "Interface",
+    "ec2messages" = "Interface",
+    "secretsmanager" = "Interface"
+}
 
 
