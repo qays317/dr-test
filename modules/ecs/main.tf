@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "wordpress" {
 }
 
 resource "aws_ecs_service" "wordpress" {
-    name = var.ecs_service.name
+    name = var.ecs_service_name
     cluster = aws_ecs_cluster.wordpress.id
     task_definition = aws_ecs_task_definition.wordpress.arn
     desired_count = var.ecs_service.desired_count
