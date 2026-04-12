@@ -11,11 +11,11 @@ variable "ecs_cluster_name" {
 }
 
 variable "ecs_task_definition" {
-  type = map(object({
+  type = object({
     family = string
     cpu = string
     memory = string
-  }))
+  })
 }
 
 variable "ecr_image_uri" {
@@ -50,14 +50,12 @@ variable "ecs_task_role_arn" {
 }
 
 variable "ecs_service" {
-  type = map(object({
-    cluster = string
-    task_definition = string
+  type = object({
     desired_count = number
     network_configuration = object({
       security_group_name = string
     })
-  }))
+  })
 }
 
 variable "security_groups" {
