@@ -76,6 +76,15 @@ terraform -chdir="environments/primary/network_rds" destroy \
   -auto-approve || true
 
 
+# Failoverr Alarms
+STACK_VARS["primary/failover_alarms"]+=" \
+  -var ecs_cluster_name=$ECS_CLUSTER_NAME
+  -var ecs_service_name=$ECS_SERVICE_NAME"
+
+destroy_stack "primary/failover_alarms"
+
+
+
 STACK_VARS["operations/dr_orchestration"]+=" \
   -var ecs_cluster_name=$ECS_CLUSTER_NAME \
   -var ecs_service_name=$ECS_SERVICE_NAME"
