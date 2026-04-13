@@ -105,6 +105,17 @@ resource "aws_cloudwatch_event_rule" "failover_alarm_rule" {
   })
 }
 
+
+
+data "terraform_remote_state" "sfn" {
+  backend = "s3"
+  config = {
+    bucket = var.state_bucket_name
+    key = "environments/operations/dr_orchestration/terraform.tfstate"
+    region = var.state_bucket_region
+  }
+}
+
 data "aws_iam_policy_document" "eventbridge_assume_role" {
   statement {
     effect = "Allow"
@@ -130,7 +141,7 @@ data "aws_iam_policy_document" "eventbridge_start_sfn_policy" {
     actions = ["states:StartExecution"]
 
     resources = [
-      aws_sfn_state_machine.dr_failover_orchestrator.arn
+      data.terraform_remote_state.sfn.outputs.state_machine_arn 
     ]
   }
 }
