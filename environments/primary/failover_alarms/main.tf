@@ -61,3 +61,25 @@ resource "aws_cloudwatch_metric_alarm" "ecs_running_tasks_alarm" {
     Name = "wordpress-ecs-running-low"
   }
 }
+
+
+resource "aws_cloudwatch_composite_alarm" "failover_trigger_alarm" {
+  alarm_name = "wordpress-failover-composite-alarm"
+  alarm_description = "Trigger failover only when ALB health and ECS running task count both indicate a real incident"
+
+  alarm_rule = join(" AND ", [
+    "ALARM(\"${aws_cloudwatch_metric_alarm.ecs_health_alarm.alarm_name}\")",
+    "ALARM(\"${aws_cloudwatch_metric_alarm.ecs_running_tasks_alarm.alarm_name}\")"
+  ])
+
+  alarm_actions = []
+
+  tags = {
+    Name = "wordpress-failover-composite-alarm"
+  }
+}
+
+
+
+
+
