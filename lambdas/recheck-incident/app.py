@@ -2,32 +2,20 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 
-
 cloudwatch = boto3.client("cloudwatch")
 
 
 def lambda_handler(event, context):
-    """
-    Re-check whether the incident is still real before starting failover.
-
-    Expected environment variables:
-      - PRIMARY_ALARM_NAME
-
-    Output:
-      {
-        "incident_confirmed": true/false,
-        "alarm_name": "...",
-        "alarm_state": "ALARM|OK|INSUFFICIENT_DATA"
-      }
-    """
-#    alarm_name = os.environ["PRIMARY_ALARM_NAME"]
-     PRIMARY_ALARM_NAME = wordpress-failover-composite-alarm
+    alarm_name = os.environ["PRIMARY_ALARM_NAME"]
 
     try:
         response = cloudwatch.describe_alarms(
             AlarmNames=[alarm_name]
         )
-        alarms = response.get("MetricAlarms", [])
+
+        composite_alarms = response.get("CompositeAlarms", [])
+        metric_alarms = response.get("MetricAlarms", [])
+        alarms = composite_alarms if composite_alarms else metric_alarms
 
         if not alarms:
             return {
