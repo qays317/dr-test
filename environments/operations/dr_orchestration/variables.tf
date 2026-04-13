@@ -30,7 +30,7 @@ variable "dr_region" {
 variable "primary_alarm_name" {
   description = "CloudWatch alarm name used to recheck incident status"
   type        = string
-  default = "name1"
+  default = "wordpress-failover-composite-alarm"
 }
 
 variable "dr_replica_identifier" {
