@@ -164,3 +164,33 @@ resource "aws_iam_role_policy_attachment" "eventbridge_start_sfn_attach" {
 }
 
 
+
+resource "aws_cloudwatch_event_target" "start_failover_sfn" {
+  rule      = aws_cloudwatch_event_rule.failover_alarm_rule.name
+  arn       = data.terraform_remote_state.sfn.outputs.state_machine_arn 
+  role_arn  = aws_iam_role.eventbridge_invoke_sfn_role.arn
+
+  input_transformer {
+    input_paths = {
+      alarm_name   = "$.detail.alarmName"
+      state_value  = "$.detail.state.value"
+      reason       = "$.detail.state.reason"
+      account      = "$.account"
+      region       = "$.region"
+      time         = "$.time"
+    }
+
+    input_template = <<EOF
+{
+  "trigger_source": "eventbridge-cloudwatch-alarm",
+  "alarm_name": <alarm_name>,
+  "alarm_state": <state_value>,
+  "alarm_reason": <reason>,
+  "account": <account>,
+  "region": <region>,
+  "time": <time>
+}
+EOF
+  }
+}
+
