@@ -90,6 +90,15 @@ STACK_VARS["dr/s3"]+=" \
 deploy_stack "primary/s3"
 deploy_stack "dr/s3"
 
+# DR Check Orchestration 
+STACK_VARS["operations/dr_orchestration"]+=" \
+  -var ecs_cluster_name=$ECS_CLUSTER_NAME \
+  -var ecs_service_name=$ECS_SERVICE_NAME" 
+
+deploy_stack "operations/dr_orchestration"
+
+
+
 # Failoverr Alarms
 STACK_VARS["primary/failover_alarms"]+=" \
   -var ecs_cluster_name=$ECS_CLUSTER_NAME
@@ -97,11 +106,6 @@ STACK_VARS["primary/failover_alarms"]+=" \
 
 deploy_stack "primary/failover_alarms"
 
-# DR Check Orchestration 
-STACK_VARS["operations/dr_orchestration"]+=" \
-  -var ecs_cluster_name=$ECS_CLUSTER_NAME \
-  -var ecs_service_name=$ECS_SERVICE_NAME" 
 
-deploy_stack "operations/dr_orchestration"
 
 echo "🎉 Deployment complete!"
