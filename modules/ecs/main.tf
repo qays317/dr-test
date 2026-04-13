@@ -144,10 +144,11 @@ data "aws_route_tables" "private" {
     values = ["*private*", "*Private*"]
   }
 }
+
 locals {
   effective_vpc_endpoints = {
     for k, v in var.vpc_endpoints : k => v
-    if var.aws_region != var.primary_region || k != "secretsmanager"
+    if var.create_secretsmanager_endpoint || k != "secretsmanager"
   }
 }
 
