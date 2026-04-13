@@ -20,7 +20,8 @@ def lambda_handler(event, context):
         "alarm_state": "ALARM|OK|INSUFFICIENT_DATA"
       }
     """
-    alarm_name = os.environ["PRIMARY_ALARM_NAME"]
+#    alarm_name = os.environ["PRIMARY_ALARM_NAME"]
+     PRIMARY_ALARM_NAME = wordpress-failover-composite-alarm
 
     try:
         response = cloudwatch.describe_alarms(
