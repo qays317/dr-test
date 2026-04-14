@@ -27,7 +27,7 @@ variable "primary_alarm_name" {
   default = "wordpress-failover-composite-alarm"
 }
 
-variable "dr_replica_identifier" {
+variable "rds_replica_identifier" {
   description = "RDS read replica identifier in DR region"
   type        = string
 }
