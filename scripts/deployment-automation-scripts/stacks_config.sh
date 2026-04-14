@@ -47,6 +47,7 @@ STACK_VARS["primary/alb"]="\
 # DR Read Replica RDS
 STACK_VARS["dr/read_replica_rds"]="\
   -var rds_identifier=$RDS_IDENTIFIER \
+  -var rds_replica_identifier=$RDS_REPLICA_IDENTIFIER \
   -var primary_region=$PRIMARY_REGION \
   -var dr_region=$DR_REGION \
   -var state_bucket_name=$TF_STATE_BUCKET_NAME \
@@ -111,7 +112,7 @@ STACK_VARS["primary/failover_alarms"]="\
 STACK_VARS["operations/dr_orchestration"]="\
   -var primary_region=$PRIMARY_REGION \
   -var dr_region=$DR_REGION \
-  -var dr_replica_identifier=$RDS_REPLICA_IDENTIFIER \
+  -var dr_replica_identifier=$RDS_REPLICA_IDENTIFIER" \
   -var max_replication_lag_seconds=$MAX_REPLICA_LAG \
   -var state_bucket_name=$TF_STATE_BUCKET_NAME \
   -var state_bucket_region=$TF_STATE_BUCKET_REGION"
