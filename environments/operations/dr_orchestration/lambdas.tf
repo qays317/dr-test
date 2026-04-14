@@ -25,6 +25,8 @@ resource "aws_lambda_function" "main" {
   filename         = data.archive_file.main[each.key].output_path
   source_code_hash = data.archive_file.main[each.key].output_base64sha256
 
+  layers = each.key == "validate-db-writable" ? [aws_lambda_layer_version.pymysql.arn] : null
+
   environment {
     variables = each.value.environment
   }
@@ -43,4 +45,3 @@ resource "aws_lambda_layer_version" "pymysql" {
 }
 
 
-layers = [aws_lambda_layer_version.pymysql.arn]
