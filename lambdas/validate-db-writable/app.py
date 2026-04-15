@@ -7,7 +7,8 @@ import pymysql
 
 
 def get_secret(secret_arn: str) -> dict:
-    client = boto3.client("secretsmanager")
+    region = os.environ.get("DR_REGION")
+    client = boto3.client("secretsmanager", region_name=region)
     response = client.get_secret_value(SecretId=secret_arn)
     return json.loads(response["SecretString"])
 
