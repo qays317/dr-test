@@ -77,7 +77,7 @@ data "aws_iam_policy_document" "lambda_policy" {
     ]
 
     resources = [
-      data.terraform_remote_state.dr_rds.outputs.wordpress_secret_arn
+      "arn:aws:secretsmanager:${var.dr_region}:${data.aws_caller_identity.current.account_id}:secret:wordpress-rds-replica-secret-*"
     ]
   }
 
