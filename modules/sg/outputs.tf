@@ -29,7 +29,7 @@ output "db_setup_lambda_security_group_id" {
 
 output "dr_rds_sg_id" {
     value = try([ for k, v in aws_security_group.main : v.id
-                  if lookup( v.tags, "Name", "") == "vpc-endpoints-SG"][0], null ) 
+                  if lookup( v.tags, "Name", "") == "Lambda-validate-db-writable-SG"][0], null ) 
 }
 
 
