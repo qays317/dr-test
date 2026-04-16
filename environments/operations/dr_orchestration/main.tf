@@ -25,7 +25,7 @@ module "sg" {
   vpc_id = data.terraform_remote_state.network.outputs.vpc_id
   vpc_cidr = data.terraform_remote_state.network.outputs.vpc_cidr
   security_group = var.lambda_validate_db_writable_security_group_config
-  stage_tag = "RDS"
+  stage_tag = "DR Orchestration"
 }
 
 # Creating Lambda functions
