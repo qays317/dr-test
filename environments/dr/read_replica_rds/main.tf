@@ -46,8 +46,6 @@ resource "aws_db_instance" "read_replica" {
   # Read replicas inherit most settings from source
   skip_final_snapshot = true
 
-  manage_master_user_password = true 
-
   tags = {
     Name = "WordPress-DR-ReadReplica"
     Environment = "DR"
@@ -107,7 +105,6 @@ resource "aws_vpc_endpoint" "secretsmanager" {
         Action = "secretsmanager:*"
         Resource = [
           aws_secretsmanager_secret.rr.arn,
-          aws_db_instance.read_replica.master_user_secret[0].secret_arn
         ]
       }
     ]
