@@ -18,6 +18,7 @@ variable "function" {
   type = map(object({
     timeout = number
     environment = map(string)
+    role_arn = string
 
     vpc_config = optional(object({
       subnet_ids = list(string)
