@@ -58,7 +58,8 @@ STACK_VARS["dr/read_replica_rds"]="\
   -var primary_region=$PRIMARY_REGION \
   -var dr_region=$DR_REGION \
   -var state_bucket_name=$TF_STATE_BUCKET_NAME \
-  -var state_bucket_region=$TF_STATE_BUCKET_REGION"
+  -var state_bucket_region=$TF_STATE_BUCKET_REGION \
+  -var-file=read_replica_rds.tfvars"
 
 # DR S3
 STACK_VARS["dr/s3"]="\
