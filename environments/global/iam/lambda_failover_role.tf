@@ -10,7 +10,8 @@ module "lambda_failover" {
   ]
   
   inline_policy_statements = [
-    # Logs
+
+  # Logs
     {
       Effect = "Allow"
       Actions = [
