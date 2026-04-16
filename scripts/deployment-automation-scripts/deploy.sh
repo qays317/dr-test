@@ -45,7 +45,8 @@ deploy_stack() {
 
 deploy_stack "global/iam"
 deploy_stack "global/oac"
-deploy_stack "primary/network_rds"
+deploy_stack "primary/network"
+deploy_stack "primary/rds"
 deploy_stack "dr/network"
 deploy_stack "primary/s3"
 deploy_stack "primary/alb"
