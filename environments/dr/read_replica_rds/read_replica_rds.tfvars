@@ -9,7 +9,7 @@ dr_rds_security_group_config = {
             }
         }
     }
-    Lambda-validate-DB-writable-SG = {
+    Lambda-validate-db-writable-SG = {
         egress = {
             mysql_access = {
                 ip_protocol = "tcp"
