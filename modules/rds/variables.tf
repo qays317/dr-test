@@ -42,12 +42,3 @@ variable "security_groups" {
 variable "secretsmanager_endpoint_sg_name" {  
     type = string
 }
-
-variable "lambda_security_group_name" {
-    type = string
-}
-
-variable "lambda_role_arn" {
-    type = string
-}
-

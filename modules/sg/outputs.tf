@@ -21,3 +21,9 @@ output "vpc_endpoints_security_group_id" {
     value = try([ for k, v in aws_security_group.main : v.id
                   if lookup( v.tags, "Name", "") == "vpc-endpoints-SG"][0], null ) 
 }
+
+output "db_setup_lambda_security_group_id" {
+    value = try([ for k, v in aws_security_group_main : v.id 
+                  if lookup( v.tags, "Name", "") == "Lambda-SG"][0], null)
+  
+}

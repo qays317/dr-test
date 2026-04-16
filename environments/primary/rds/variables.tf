@@ -1,7 +1,3 @@
-//=============================================================================================================
-//   RDS Variables
-//=============================================================================================================
-
 variable "rds_security_group_config" {
     type = map(object({
         vpc_name = string
@@ -48,3 +44,7 @@ variable "secretsmanager_endpoint_sg_name" {
 variable "lambda_security_group_name" {
     type = string
 }
+
+
+
+
