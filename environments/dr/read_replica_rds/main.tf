@@ -90,7 +90,7 @@ resource "aws_secretsmanager_secret_version" "rr" {
 # VPC Endpoint for Secret
 resource "aws_vpc_endpoint" "secretsmanager" {
   vpc_id = data.terraform_remote_state.network.outputs.vpc_id
-  service_name = "com.amazonaws.${data.aws_region.current.name}.secretsmanager"
+  service_name = "com.amazonaws.${var.dr_region}.secretsmanager"
   vpc_endpoint_type = "Interface"
   subnet_ids = data.terraform_remote_state.network.outputs.private_subnets_ids
   security_group_ids = [module.sg.dr_secret_manager_endpoint_sg_id]
