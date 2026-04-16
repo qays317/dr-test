@@ -25,8 +25,6 @@ module "sg" {
   stage_tag = "RDS"
 }
 
-
-
 # Get primary RDS instance info
 data "aws_db_instance" "primary" {
   db_instance_identifier = var.rds_identifier
