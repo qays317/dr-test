@@ -12,7 +12,6 @@ resource "aws_sfn_state_machine" "dr_failover_orchestrator" {
   definition = templatefile(
     "${local.stepfunction_base}/dr-failover-orchestrator.asl.json",
     {
-      recheck_incident_lambda_arn        = aws_lambda_function.main["recheck-incident"].arn
       check_replica_readiness_lambda_arn = aws_lambda_function.main["check-replica-readiness"].arn
       promote_replica_lambda_arn         = aws_lambda_function.main["promote-replica"].arn
       check_db_available_lambda_arn      = aws_lambda_function.main["check-db-available"].arn
