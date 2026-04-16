@@ -14,8 +14,8 @@ STACK_VARS["global/iam"]="\
 STACK_VARS["global/oac"]="\
   -var primary_region=$PRIMARY_REGION"
 
-# PRIMARY NETWORK + RDS
-STACK_VARS["primary/network_rds"]="\
+# PRIMARY NETWORK
+STACK_VARS["primary/network"]="\
   -var primary_region=$PRIMARY_REGION \
   -var state_bucket_name=$TF_STATE_BUCKET_NAME \
   -var state_bucket_region=$TF_STATE_BUCKET_REGION \
