@@ -19,7 +19,7 @@ data "terraform_remote_state" "vpc" {
 module "sg" {
   source = "../../../modules/sg"
   vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
-  vpc_cidr = data.terraform_remote_state.vpc_cidr
+  vpc_cidr = data.terraform_remote_state.vpc.outputs.vpc_cidr
   security_group = var.rds_security_group_config
   stage_tag = "RDS"
 }
