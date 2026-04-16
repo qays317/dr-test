@@ -45,7 +45,9 @@ resource "aws_db_instance" "read_replica" {
   
   # Read replicas inherit most settings from source
   skip_final_snapshot = true
-  
+
+  manage_master_user_password = true 
+
   tags = {
     Name = "WordPress-DR-ReadReplica"
     Environment = "DR"
