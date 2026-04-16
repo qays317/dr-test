@@ -27,7 +27,7 @@ resource "aws_lambda_function" "main" {
 
   source_code_hash = data.archive_file.main[each.key].output_base64sha256
 
-  layers = each.key == "validate-db-writable" ? [aws_lambda_layer_version.pymysql.arn] : []
+  layers = each.key.layer ? [aws_lambda_layer_version.pymysql.arn] : []
 
   dynamic "vpc_config" {
     for_each = try(each.value.vpc_config, null) == null ? [] : [each.value.vpc_config]
