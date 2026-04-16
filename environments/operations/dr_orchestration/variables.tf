@@ -1,4 +1,4 @@
-variable "_config" {
+variable "lambda_validate_db_writable_security_group_config" {
     type = map(object({
         vpc_name = string
         ingress = optional(map(object({
