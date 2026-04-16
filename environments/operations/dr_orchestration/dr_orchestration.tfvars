@@ -1,4 +1,4 @@
-lambda-validate-db-writable-sg-config = {
+security_group_config = {
    Lambda-validate-db-writable-SG = {
         egress = {
             mysql_access = {
