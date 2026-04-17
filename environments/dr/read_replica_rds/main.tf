@@ -110,5 +110,5 @@ resource "aws_vpc_endpoint" "secretsmanager" {
     ]
   })
 
-  tags = { Name = "drsecretsmanager-endpoint" }
+  tags = { Name = "dr-secretsmanager-endpoint" }
 }
