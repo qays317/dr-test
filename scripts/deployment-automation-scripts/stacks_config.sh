@@ -124,6 +124,6 @@ STACK_VARS["operations/dr_orchestration"]="\
   -var max_replication_lag_seconds=$MAX_REPLICA_LAG \
   -var state_bucket_name=$TF_STATE_BUCKET_NAME \
   -var state_bucket_region=$TF_STATE_BUCKET_REGION
-  -var-file=orchestration.tfvars"
+  -var-file=dr_orchestration.tfvars"
 
 
