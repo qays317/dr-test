@@ -1,6 +1,5 @@
 variable "security_group_config" {
     type = map(object({
-        vpc_name = string
         ingress = optional(map(object({
             ip_protocol = string
             from_port = number
