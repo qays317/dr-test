@@ -1,5 +1,7 @@
 {
   "Comment": "DR failover orchestrator for multi-region ECS + RDS",
+  "StartAt": "CheckReplicaReadiness",
+  "States": {
     "CheckReplicaReadiness": {
       "Type": "Task",
       "Resource": "${check_replica_readiness_lambda_arn}",
@@ -116,3 +118,4 @@
       "Type": "Succeed"
     }
   }
+}
