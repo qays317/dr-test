@@ -101,8 +101,13 @@ resource "aws_sfn_state_machine" "dr_failover_orchestrator" {
   definition = templatefile(
     "${path.module}/../../../stepfunctions/dr-failover-orchestrator.asl.json",
     {
-        snf_functions_arns = module.lambda.snf_functions_arns
-    }
+      check_replica_readiness_lambda_arn = module.lambda.check_replica_readiness_arn 
+      promote_replica_lambda_arn         = module.lambda.promote_replica_arn
+      check_db_available_lambda_arn      = module.lambda.check_db_available_arn
+      validate_db_writable_lambda_arn    = module.lambda.validate_db_writable_arn
+      scaleup_dr_service_lambda_arn      = module.lambda.scaleup_dr_service_arn
+      check_ecs_healthy_lambda_arn       = module.lambda.check_ecs_healthy_arn
+      validate_application_lambda_arn    = module.lambda.validate_application_arn    }
   )
 
   logging_configuration {
