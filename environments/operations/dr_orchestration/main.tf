@@ -120,7 +120,8 @@ resource "aws_sfn_state_machine" "dr_failover_orchestrator" {
       validate_db_writable_lambda_arn    = module.lambda.validate_db_writable_arn
       scaleup_dr_service_lambda_arn      = module.lambda.scaleup_dr_service_arn
       check_ecs_healthy_lambda_arn       = module.lambda.check_ecs_healthy_arn
-      validate_application_lambda_arn    = module.lambda.validate_application_arn    }
+      validate_application_lambda_arn    = module.lambda.validate_application_arn    
+    }
   )
 
   logging_configuration {
