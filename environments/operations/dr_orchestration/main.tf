@@ -55,11 +55,13 @@ module "iam" {
   
   inline_policy_statements = [
     {
-      actions = [
+      Effect = "Allow"
+
+      Actions = [
         "lambda:InvokeFunction"
       ]
 
-      resources = [
+      Resources = [
         module.lambda.snf_functions_arns
       ] 
     },
