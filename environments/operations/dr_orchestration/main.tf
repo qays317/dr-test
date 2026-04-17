@@ -62,8 +62,13 @@ module "iam" {
       ]
 
       Resource = [
-        module.lambda.snf_functions_arns
-      ] 
+      module.lambda.check_replica_readiness_arn, 
+      module.lambda.promote_replica_arn,
+      module.lambda.check_db_available_arn,
+      module.lambda.validate_db_writable_arn,
+      module.lambda.scaleup_dr_service_arn,
+      module.lambda.check_ecs_healthy_arn,
+      module.lambda.validate_application_arn        ] 
     },
 
     {
