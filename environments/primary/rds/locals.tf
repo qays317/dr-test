@@ -12,6 +12,9 @@ locals {
       subnets_names = ["Prv-A", "Prv-B"]
       security_group_id = data.terraform_remote_state.network.outputs.rds_sg_id
   }
+}
+
+locals = {
 
   lambda = {
       
@@ -19,7 +22,7 @@ locals {
         timeout = 900
         role_arn = data.terraform_remote_state.iam.outputs.lambda_db_setup_role_arn
         vpc_config = {
-            subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnets_ids
+            subnet_ids = data.terraform_remote_state.network.outputs.private_subnets_ids
             security_group_ids = [data.terraform_remote_state.network.db_setup_lambda_security_group_id]
         }
         layer = true
