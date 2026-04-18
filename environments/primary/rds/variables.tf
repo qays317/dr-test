@@ -33,6 +33,7 @@ variable "rds_config" {
         username = string 
         db_username = string 
         db_name = string
+        rds_password = string
         subnets_names = list(string)
     })
 }
