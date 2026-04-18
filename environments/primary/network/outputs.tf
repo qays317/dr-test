@@ -21,7 +21,9 @@ output "public_subnets_ids" {
 
 
 
-
+output "rds_sg_id" {
+    value = module.sg.rds_sg_id
+}
 
 output "db_setup_lambda_sg_id" {
     value = module.sg.db_setup_lambda_sg_id  
