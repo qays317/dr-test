@@ -14,7 +14,7 @@ locals {
   }
 }
 
-locals = {
+locals {
 
   lambda = {
       
