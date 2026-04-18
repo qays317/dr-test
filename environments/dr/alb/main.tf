@@ -11,14 +11,6 @@ data "terraform_remote_state" "network" {
   }  
 }
 
-module "sg_alb" {
-  source = "../../../modules/sg"
-  vpc_id = data.terraform_remote_state.network.outputs.vpc_id
-  vpc_cidr = data.terraform_remote_state.network.outputs.vpc_cidr
-  security_group = var.alb_security_group_config
-  stage_tag = "ALB"
-}
-
 module "cert" {
   count = var.provided_ssl_certificate_arn == "" ? 1 : 0
   source = "../../../modules/acm"
@@ -35,7 +27,7 @@ module "alb" {
   vpc_id = data.terraform_remote_state.network.outputs.vpc_id
   public_subnet_ids = data.terraform_remote_state.network.outputs.public_subnets_ids
   # ALB configuration
-  alb_security_group_id = module.sg_alb.alb_security_group_id
+  alb_security_group_id = data.terraform_remote_state.network.outputs.alb_security_group_id
   target_group = var.target_group_config
   alb_name = var.alb_name
   # SSL certificate (whether to create it or already provided)

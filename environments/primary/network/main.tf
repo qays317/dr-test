@@ -5,3 +5,17 @@ module "network" {
   route_table = var.route_table_config
 }
 
+module "sg" {
+  source = "../../../modules/sg"
+  vpc_id = module.network.vpc_id
+  security_group = var.security_group_config
+  stage_tag = "Network" 
+}
+
+module "endpoint" {
+  source = "../../../modules/endpoint"
+  vpc_id = module.network.vpc_id
+  private_subnets_ids = module.network.private_subnets_ids
+  vpc_endpoints = local.vpc_endpoints_config 
+}
+

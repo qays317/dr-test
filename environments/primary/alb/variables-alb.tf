@@ -27,26 +27,6 @@ variable "provided_ssl_certificate_arn" {
 //     ALB Variables
 //=============================================================================================================
 
-variable "alb_security_group_config" {
-    type = map(object({
-        ingress = optional(map(object({
-            from_port = number
-            to_port = number
-            ip_protocol = string
-            cidr_block = optional(string)
-            vpc_cidr = optional(bool)
-            prefix_list_ids = optional(list(string))
-        })))
-        egress = optional(map(object({
-            from_port = number
-            to_port = number
-            ip_protocol = string
-            vpc_cidr = optional(bool)
-            cidr_block = optional(string)
-        })))
-    }))
-}
-
 variable "target_group_config" {
     type = object({
         name = string

@@ -7,7 +7,7 @@ data "terraform_remote_state" "iam" {
   }
 }
 
-data "terraform_remote_state" "vpc" {
+data "terraform_remote_state" "network" {
     backend = "s3"
     config = {
       bucket = var.state_bucket_name
@@ -16,26 +16,15 @@ data "terraform_remote_state" "vpc" {
     }
 }
 
-module "sg" {
-  source = "../../../modules/sg"
-  vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
-  vpc_cidr = data.terraform_remote_state.vpc.outputs.vpc_cidr
-  security_group = var.rds_security_group_config
-  stage_tag = "RDS"
-}
-
 module "rds" {
   source = "../../../modules/rds"
   # VPC configuration
-  vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
-  subnets = data.terraform_remote_state.vpc.outputs.subnets
-  private_subnets_ids = data.terraform_remote_state.vpc.outputs.private_subnets_ids
-  # SGs configuration
-  security_groups = module.sg.rds_security_groups
-  secretsmanager_endpoint_sg_name = var.secretsmanager_endpoint_sg_name
+  vpc_id = data.terraform_remote_state.network.outputs.vpc_id
+  subnets = data.terraform_remote_state.network.outputs.subnets
+  private_subnets_ids = data.terraform_remote_state.network.outputs.private_subnets_ids
   # RDS configuration
   rds_identifier = var.rds_identifier
-  rds = var.rds_config
+  rds = local.rds_config
 }
 
 module "lambda" {

@@ -115,7 +115,7 @@ resource "aws_ecs_service" "wordpress" {
 
     network_configuration {
       subnets = var.private_subnets_ids
-      security_groups = [var.security_groups[var.ecs_service_sg_name]]
+      security_groups = [var.ecs_service_sg_id]
       assign_public_ip = false
     }
 
@@ -127,46 +127,6 @@ resource "aws_ecs_service" "wordpress" {
 }
 
 
-
-/*
-===================================================================================================================================================================
-===================================================================================================================================================================
-                                                               VPC Endpoints
-===================================================================================================================================================================
-===================================================================================================================================================================
-*/
-
-# Get private route table for Gateway endpoints
-data "aws_route_tables" "private" {
-  vpc_id = var.vpc_id
-  filter {
-    name = "tag:Name"
-    values = ["*private*", "*Private*"]
-  }
-}
-
-locals {
-  effective_vpc_endpoints = {
-    for k, v in var.vpc_endpoints : k => v
-    if var.create_secretsmanager_endpoint || k != "secretsmanager"
-  }
-}
-
-# VPC Endpoints
-resource "aws_vpc_endpoint" "main" {
-  for_each = local.effective_vpc_endpoints
-    vpc_id = var.vpc_id
-    service_name = "com.amazonaws.${data.aws_region.current.name}.${each.key}"
-    vpc_endpoint_type = each.value
-    # Interface endpoints use subnets and security groups
-    subnet_ids = each.value == "Interface" ? var.private_subnets_ids : null
-    security_group_ids = each.value == "Interface" ? [var.vpc_endpoints_security_group_id] : null
-    private_dns_enabled = each.value == "Interface" ? true : null
-    # Gateway endpoints use route tables
-    route_table_ids = each.value == "Gateway" ? data.aws_route_tables.private.ids : null
-    # Tag
-    tags = { Name = "${each.key}-endpoint" }
-}
 
 
 /*

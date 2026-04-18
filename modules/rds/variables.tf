@@ -22,10 +22,9 @@ variable "rds" {
         instance_class = string 
         multi_az = bool  
         # Security & Network
-        security_group_name = string
+        security_group_id = string
         subnets_names = list(string)
         # Database Setup
-        rds_password = string
         username = string                   # Master admin user name
         db_name = string
         db_username = string                # wordpress database username - it will be created using (Lambda / bastion host)
@@ -34,12 +33,4 @@ variable "rds" {
 
 variable "private_subnets_ids" {                     
     type = list(string)
-}
-
-variable "security_groups" {
-    type = map(string)
-}
-
-variable "secretsmanager_endpoint_sg_name" {  
-    type = string
 }

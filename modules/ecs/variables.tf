@@ -54,7 +54,7 @@ variable "ecs_service_name" {
   type = string
 }
 
-variable "ecs_service_sg_name" {
+variable "ecs_service_sg_id" {
   type = string
 }
 
@@ -70,17 +70,12 @@ variable "target_group_arn" {
   type = string
 }
 
-variable "vpc_endpoints" {
-  type = map(string)
-}
-
 variable "private_subnets_ids" {          
   type = list(string)
 }
 
-variable "vpc_endpoints_security_group_id" {     
-  type = string
-}
+
+
 
 
 
@@ -88,11 +83,6 @@ variable "cloudfront_distribution_id" {
   type = string
 }
 
-variable "create_secretsmanager_endpoint" {
-  description = "Whether to create the Secrets Manager VPC endpoint in this stack"
-  type        = bool
-  default     = true
-}
 
 variable "cloudfront_distribution_domain" {
   type = string

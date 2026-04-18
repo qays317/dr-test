@@ -20,16 +20,6 @@ data "terraform_remote_state" "alb" {
   }
 }
 
-module "sg_ecs" {
-  source = "../../../modules/sg"
-  vpc_id = data.terraform_remote_state.network.outputs.vpc_id
-  security_group = var.ecs_security_group_config
-  stage_tag = "ECS"
-  external_security_groups = {
-    ALB-SG = data.terraform_remote_state.alb.outputs.alb_security_group_id
-  }
-}
-
 data "terraform_remote_state" "iam" {
   backend = "s3"
   config = {
@@ -77,16 +67,11 @@ module "ecs" {
     ecr_image_uri = var.ecr_image_uri
     # ECS configuration
     security_groups = module.sg_ecs.ecs_security_groups
-    vpc_endpoints_security_group_id = module.sg_ecs.vpc_endpoints_security_group_id
     ecs_cluster_name = var.ecs_cluster_name
     ecs_execution_role_arn = data.terraform_remote_state.iam.outputs.ecs_execution_role_arn
     ecs_task_role_arn = data.terraform_remote_state.iam.outputs.ecs_task_role_arn
     ecs_task_definition = var.ecs_task_definition_config
     ecs_service_name = var.ecs_service_name
-    ecs_service_sg_name = var.ecs_service_sg_name
+    ecs_service_sg_id = data.terraform_remote_state.network.outputs.wordpress_service_sg_id
     ecs_task_desired_count = var.ecs_task_desired_count
-    # VPC Endpoints
-    vpc_endpoints = var.vpc_endpoints_config
 }
-
-

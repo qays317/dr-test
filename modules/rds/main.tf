@@ -20,7 +20,7 @@ resource "aws_db_instance" "rds" {
   engine_version = var.rds.engine_version
   instance_class = var.rds.instance_class
   multi_az = var.rds.multi_az 
-  vpc_security_group_ids = [var.security_groups[var.rds.security_group_name]]
+  vpc_security_group_ids = [var.rds.security_group_id]
   db_subnet_group_name = aws_db_subnet_group.wordpress.name
   publicly_accessible = false
   allocated_storage = 20    
@@ -36,7 +36,7 @@ resource "aws_db_instance" "rds" {
 
 
 //==========================================================================================================================================
-//                                                    Secrets + Secrets Manager Endpoint
+//                                                     Secrets Manager
 //==========================================================================================================================================
 
 
@@ -57,32 +57,3 @@ resource "aws_secretsmanager_secret_version" "wordpress" {
     port     = aws_db_instance.rds.port
   })
 }
-
-data "aws_region" "current" {}  
-
-# VPC Endpoint for Secrets Manager
-resource "aws_vpc_endpoint" "secretsmanager" {
-  vpc_id = var.vpc_id
-  service_name = "com.amazonaws.${data.aws_region.current.name}.secretsmanager"
-  vpc_endpoint_type = "Interface"
-  subnet_ids = var.private_subnets_ids
-  security_group_ids = [var.security_groups[var.secretsmanager_endpoint_sg_name]]
-  private_dns_enabled = true
-  
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Allow"
-        Principal = "*"
-        Action = "secretsmanager:*"
-        Resource = [
-          aws_secretsmanager_secret.wordpress.arn
-        ]
-      }
-    ]
-  })
-
-  tags = { Name = "secretsmanager-endpoint" }
-}
-

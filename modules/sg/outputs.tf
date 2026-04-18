@@ -1,7 +1,33 @@
 //==========================================================================================================================================
 //                                                         /modules/sg/outputs.tf
 //==========================================================================================================================================
+output "rds_sg_id" {
+    value = aws_security_group.main["RDS-SG"].id
+}
 
+output "lambda_sg_id" {
+    value = aws_security_group.main["Lambda-SG "].id
+}
+
+output "secretsmanager_endpoint_sg_id" {
+    value = aws_security_group.main["SecretsManager-Endpoint-SG"].id
+}
+
+output "alb_sg_id" {
+    value = aws_security_group.main["ALB-SG"].id
+}
+
+output "wordpress_service_sg_id" {
+    value = aws_security_group.main["wordpress-service-SG"].id
+}
+
+output "vpc_endpoints_sg_id" {
+    value = aws_security_group.main["vpc-endpoints-SG"].id
+}
+
+
+
+/*
 output "rds_security_groups" {
     value = { for k, v in aws_security_group.main : k => v.id
               if lookup( v.tags, "Stage", "") == "RDS" }
@@ -42,6 +68,6 @@ output "lambda-validate-db-writable_sg_id" {
                   if lookup( v.tags, "Name", "") == "Lambda-validate-db-writable-SG"][0], null ) 
 }
 
-
+*/
 
 
