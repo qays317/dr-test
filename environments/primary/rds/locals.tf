@@ -23,7 +23,7 @@ locals {
         role_arn = data.terraform_remote_state.iam.outputs.lambda_db_setup_role_arn
         vpc_config = {
             subnet_ids = data.terraform_remote_state.network.outputs.private_subnets_ids
-            security_group_ids = [data.terraform_remote_state.network.db_setup_lambda_security_group_id]
+            security_group_ids = [data.terraform_remote_state.network.outputs.db_setup_lambda_security_group_id]
         }
         layer = true
         environment = {
