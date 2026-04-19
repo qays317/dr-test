@@ -27,6 +27,7 @@ locals {
         }
         layer = true
         environment = {
+            MASTER_SECRET_ARN   = module.rds.master_secret_arn
             WORDPRESS_SECRET_NAME = "${var.rds_identifier}-secret"
             DB_HOST = split(":", module.rds.rds_endpoint)[0]
             DB_PORT = tostring(module.rds.rds_port)
