@@ -75,7 +75,7 @@ def lambda_handler(event, context):
                 )
 
             cursor.execute(
-                f"GRANT ALL PRIVILEGES ON `{wp_db_name}`.* TO '{wp_db_user}'@'%%'"
+                f"GRANT ALL PRIVILEGES ON `{wp_db_name}`.* TO '{wp_db_user}'@'%'"
             )
             cursor.execute("FLUSH PRIVILEGES")
 
