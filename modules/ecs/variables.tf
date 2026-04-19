@@ -62,10 +62,6 @@ variable "ecs_task_desired_count" {
   type = number
 }
 
-variable "security_groups" {
-  type = map(string)
-}
-
 variable "target_group_arn" {            
   type = string
 }
