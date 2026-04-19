@@ -7,11 +7,6 @@ variable "ecs_task_role_arn" {
   default = ""
 }
 
-variable "s3_vpc_endpoint_id" {
-  type = string
-  default = ""
-}
-
 variable "cloudfront_distribution_arn" {
     type = string
     default = ""
