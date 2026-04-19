@@ -78,8 +78,3 @@ resource "aws_secretsmanager_secret_version" "rr" {
     port = aws_db_instance.read_replica.port
   })
 }
-
-  })
-
-  tags = { Name = "dr-secretsmanager-endpoint" }
-}
