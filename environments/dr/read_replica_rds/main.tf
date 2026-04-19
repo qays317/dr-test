@@ -41,7 +41,7 @@ resource "aws_db_instance" "read_replica" {
   
   # Network configuration
   db_subnet_group_name = aws_db_subnet_group.rr.name
-  vpc_security_group_ids = [module.sg.dr_rds_sg_id]
+  vpc_security_group_ids = [data.terraform_remote_state.outputs.read_replica_sg_id]
   
   # Read replicas inherit most settings from source
   skip_final_snapshot = true
@@ -93,7 +93,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   service_name = "com.amazonaws.${var.dr_region}.secretsmanager"
   vpc_endpoint_type = "Interface"
   subnet_ids = data.terraform_remote_state.network.outputs.private_subnets_ids
-  security_group_ids = [module.sg.dr_secret_manager_endpoint_sg_id]
+  security_group_ids = [data.terraform-remote_state.network.outputs.secretsmanager_endpoint_sg_id]
   private_dns_enabled = true
   
   policy = jsonencode({
