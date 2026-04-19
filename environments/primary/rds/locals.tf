@@ -5,8 +5,8 @@ locals {
   rds_config = {
       engine_version = "8.0"
       instance_class = "db.t3.micro"
-      username = "dbadmin"        # Replace with your DB admin username
-      db_username = "dbuser"      # Replace with your DB username
+      username = "masteruser"        # Replace with your DB admin username
+      db_username = "wordpressuser"      # Replace with your DB username
       db_name = "wordpressDB" 
       multi_az = false
       subnets_names = ["Prv-A", "Prv-B"]
