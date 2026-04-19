@@ -10,6 +10,10 @@ output "wordpress_secret_arn" {                                # For container s
     value = aws_secretsmanager_secret.wordpress.arn
 }
 
+output "master_secret_arn" {
+    value = aws_secretsmanager_secret.master.arn
+}
+
 output "rds_port" {
     value = aws_db_instance.rds.port
 }
