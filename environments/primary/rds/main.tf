@@ -43,6 +43,7 @@ resource "aws_lambda_invocation" "db_bootstrap" {
   })
 
   depends_on = [
+    module.rds,
     module.lambda
   ]
 }
