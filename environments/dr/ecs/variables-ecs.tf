@@ -2,24 +2,6 @@
 //     ECS Variables
 //=============================================================================================================
 
-variable "ecs_security_group_config" {
-  type        = map(object({
-    ingress = map(object({
-      from_port = number
-      to_port = number
-      ip_protocol = string
-      source_security_group_name = optional(string)
-      cidr_block = optional(string)
-    }))
-    egress = optional(map(object({
-      from_port = number
-      to_port = number
-      ip_protocol = string
-      cidr_block = string
-    })))
-  }))
-}
-
 variable "ecr_image_uri" {
   type = string
 }
