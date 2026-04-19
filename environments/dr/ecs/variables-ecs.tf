@@ -32,10 +32,6 @@ variable "ecs_task_desired_count" {
   type = number
 }
 
-variable "vpc_endpoints_config" {
-  type = map(string)
-}
-
 variable "dr_media_s3_bucket" {
   type = string
 }
