@@ -47,6 +47,24 @@ deploy_stack "global/iam"
 deploy_stack "global/oac"
 deploy_stack "primary/network"
 deploy_stack "primary/rds"
+deploy_stack "primary/rds"
+
+echo "Running DB bootstrap Lambda..."
+
+aws lambda invoke \
+  --function-name primary-db-setup \
+  --payload '{"trigger":"terraform"}' \
+  --cli-binary-format raw-in-base64-out \
+  /tmp/db-bootstrap.json \
+  --region us-east-1
+
+echo "Verifying secret..."
+
+aws secretsmanager get-secret-value \
+  --secret-id wordpress-rds-secret \
+  --region us-east-1
+
+echo "DB bootstrap complete"
 deploy_stack "dr/network"
 deploy_stack "primary/s3"
 deploy_stack "primary/alb"
