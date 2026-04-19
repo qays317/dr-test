@@ -18,7 +18,7 @@ module "lambda_db_setup" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ]
-      Resource = ["arn:aws:logs:${var.primary_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/wordpress-db-setup*"]
+      Resource = ["arn:aws:logs:${var.primary_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/*"]
     },
 
     # RDS auth secret (master password)
