@@ -15,7 +15,5 @@ output "target_group_arn_suffix" {
 output "alb_arn_suffix" {
     value = module.alb.alb_arn_suffix
 }
-output "alb_security_group_id" {
-    value = module.sg_alb.alb_security_group_id
-}
+
 
