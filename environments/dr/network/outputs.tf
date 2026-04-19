@@ -29,6 +29,9 @@ output "alb_sg_id" {
 }
 
 output "wordpress_service_sg_id" {
-    value = module.sg.wordpress_service_sg_id
-  
+    value = module.sg.wordpress_service_sg_id  
+}
+
+output "s3_vpc_endpoint_id" {
+    value = module.endpoint.s3_vpc_endpoint_id
 }
