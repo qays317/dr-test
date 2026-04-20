@@ -115,6 +115,7 @@ STACK_VARS["dr/ecs"]="\
 # Failover alarms
 STACK_VARS["primary/failover_alarms"]="\
   -var primary_region=$PRIMARY_REGION \
+  -var sns_email=$SNS_EMAIL \
   -var state_bucket_name=$TF_STATE_BUCKET_NAME \
   -var state_bucket_region=$TF_STATE_BUCKET_REGION"
 
