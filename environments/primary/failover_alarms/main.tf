@@ -72,7 +72,9 @@ resource "aws_cloudwatch_composite_alarm" "failover_trigger_alarm" {
     "ALARM(\"${aws_cloudwatch_metric_alarm.ecs_running_tasks_alarm.alarm_name}\")"
   ])
 
-  alarm_actions = []
+  alarm_actions = [
+    aws_sns_topic.alerts.arn
+  ]
 
   tags = {
     Name = "wordpress-failover-composite-alarm"
@@ -84,113 +86,19 @@ resource "aws_cloudwatch_composite_alarm" "failover_trigger_alarm" {
 /*
 ===================================================================================================================================================================
 ===================================================================================================================================================================
-                                                              EventBridge Rule
+                                                          SNS
 ===================================================================================================================================================================
 ===================================================================================================================================================================
 */
 
-resource "aws_cloudwatch_event_rule" "failover_alarm_rule" {
-  name        = "wordpress-failover-alarm-rule"
-  description = "Start DR Step Function when composite failover alarm enters ALARM state"
-
-  event_pattern = jsonencode({
-    source      = ["aws.cloudwatch"]
-    "detail-type" = ["CloudWatch Alarm State Change"]
-    resources   = [aws_cloudwatch_composite_alarm.failover_trigger_alarm.arn]
-    detail = {
-      state = {
-        value = ["ALARM"]
-      }
-    }
-  })
+resource "aws_sns_topic" "alerts" {
+  name = "wordpress-alerts-topic"
 }
 
-
-/*
-===================================================================================================================================================================
-===================================================================================================================================================================
-                                                             SFN IAM
-===================================================================================================================================================================
-===================================================================================================================================================================
-*/
-
-data "terraform_remote_state" "sfn" {
-  backend = "s3"
-  config = {
-    bucket = var.state_bucket_name
-    key = "environments/operations/dr_orchestration/terraform.tfstate"
-    region = var.state_bucket_region
-  }
+resource "aws_sns_topic_subscription" "email" {
+  topic_arn = aws_sns_topic.alerts.arn
+  protocol = "email"
+  endpoint = var.sns_email
 }
 
-data "aws_iam_policy_document" "eventbridge_assume_role" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["events.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRole"]
-  }
-}
-
-resource "aws_iam_role" "eventbridge_invoke_sfn_role" {
-  name               = "eventbridge-start-sfn-role"
-  assume_role_policy = data.aws_iam_policy_document.eventbridge_assume_role.json
-}
-
-data "aws_iam_policy_document" "eventbridge_start_sfn_policy" {
-  statement {
-    effect = "Allow"
-
-    actions = ["states:StartExecution"]
-
-    resources = [
-      data.terraform_remote_state.sfn.outputs.state_machine_arn 
-    ]
-  }
-}
-
-resource "aws_iam_policy" "eventbridge_start_sfn_policy" {
-  name   = "eventbridge-start-sfn-policy"
-  policy = data.aws_iam_policy_document.eventbridge_start_sfn_policy.json
-}
-
-resource "aws_iam_role_policy_attachment" "eventbridge_start_sfn_attach" {
-  role       = aws_iam_role.eventbridge_invoke_sfn_role.name
-  policy_arn = aws_iam_policy.eventbridge_start_sfn_policy.arn
-}
-
-
-
-resource "aws_cloudwatch_event_target" "start_failover_sfn" {
-  rule      = aws_cloudwatch_event_rule.failover_alarm_rule.name
-  arn       = data.terraform_remote_state.sfn.outputs.state_machine_arn 
-  role_arn  = aws_iam_role.eventbridge_invoke_sfn_role.arn
-
-  input_transformer {
-    input_paths = {
-      alarm_name   = "$.detail.alarmName"
-      state_value  = "$.detail.state.value"
-      reason       = "$.detail.state.reason"
-      account      = "$.account"
-      region       = "$.region"
-      time         = "$.time"
-    }
-
-    input_template = <<EOF
-{
-  "trigger_source": "eventbridge-cloudwatch-alarm",
-  "alarm_name": <alarm_name>,
-  "alarm_state": <state_value>,
-  "alarm_reason": <reason>,
-  "account": <account>,
-  "region": <region>,
-  "time": <time>
-}
-EOF
-  }
-}
 

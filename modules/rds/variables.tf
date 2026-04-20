@@ -6,10 +6,6 @@ variable "vpc_id" {
     type = string
 }
 
-variable "subnets" {                                   
-    type = map(string)
-}
-
 variable "rds_identifier" {
     type = string
 }
@@ -23,14 +19,10 @@ variable "rds" {
         multi_az = bool  
         # Security & Network
         security_group_id = string
-        subnets_names = list(string)
+        subnets_ids = list(string)
         # Database Setup
         username = string                   # Master admin user name
         db_name = string
         db_username = string                # wordpress database username - it will be created using (Lambda / bastion host)
     })
-}
-
-variable "private_subnets_ids" {                     
-    type = list(string)
 }

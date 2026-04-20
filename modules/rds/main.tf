@@ -4,7 +4,7 @@
 
 resource "aws_db_subnet_group" "wordpress" {
   name = "${var.rds_identifier}-subnet-group"
-  subnet_ids = [for subnet_name in var.rds.subnets_names : var.subnets[subnet_name]]
+  subnet_ids = var.rds.subnet_ids
 }
 
 

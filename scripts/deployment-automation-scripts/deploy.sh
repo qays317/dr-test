@@ -99,8 +99,7 @@ deploy_stack "dr/ecs"
 # Update S3 bucket policy after ECS
 ECS_TASK_ROLE_ARN=$(terraform -chdir="environments/global/iam" output -raw ecs_task_role_arn)
 CLOUDFRONT_DISTRIBUTION_ARN=$(terraform -chdir="environments/global/cdn_dns" output -raw cloudfront_distribution_arn)
-#PRIMARY_S3_VPC_ENDPOINT_ID=$(terraform -chdir="environments/primary/ecs" output -raw s3_vpc_endpoint_id)
-#DR_S3_VPC_ENDPOINT_ID=$(terraform -chdir="environments/dr/ecs" output -raw s3_vpc_endpoint_id)
+
 STACK_VARS["primary/s3"]+=" \
   -var cloudfront_distribution_arn=$CLOUDFRONT_DISTRIBUTION_ARN \
   -var ecs_task_role_arn=$ECS_TASK_ROLE_ARN"
@@ -122,6 +121,7 @@ deploy_stack "operations/dr_orchestration"
 
 # Failoverr Alarms
 STACK_VARS["primary/failover_alarms"]+=" \
+  -var sns_email=$SNS_EMAIL \
   -var ecs_cluster_name=$ECS_CLUSTER_NAME
   -var ecs_service_name=$ECS_SERVICE_NAME"
 
