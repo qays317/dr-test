@@ -100,15 +100,12 @@ resource "aws_sfn_state_machine" "dr_failover_orchestrator" {
   definition = templatefile(
     "${path.module}/../../../stepfunctions/dr-failover-orchestrator.asl.json",
     {
-      check_replica_readiness_lambda_arn = module.lambda.check_replica_readiness_arn 
-      promote_replica_lambda_arn         = module.lambda.promote_replica_arn
-      check_db_available_lambda_arn      = module.lambda.check_db_available_arn
-      validate_db_writable_lambda_arn    = module.lambda.validate_db_writable_arn
-      scaleup_dr_service_lambda_arn      = module.lambda.scaleup_dr_service_arn
-      check_ecs_healthy_lambda_arn       = module.lambda.check_ecs_healthy_arn
-      validate_application_lambda_arn    = module.lambda.validate_application_arn    
-    }
-  )
+        replica_failover_handler_lambda_arn = module.lambda.replica_failover_handler_arn
+        service_recovery_handler_lambda_arn = module.lambda.service_recovery_handler_arn
+        validate_db_writable_lambda_arn     = module.lambda.validate_db_writable_arn
+        validate_application_lambda_arn     = module.lambda.validate_application_arn
+     }
+   )
 
   logging_configuration {
     log_destination        = "${aws_cloudwatch_log_group.sfn_logs.arn}:*"
