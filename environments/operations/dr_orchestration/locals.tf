@@ -37,4 +37,5 @@ locals {
       }
     }
   }
+  lambda_source_base = ""
 }
