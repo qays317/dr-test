@@ -34,7 +34,7 @@ module "lambda" {
   source = "../../../modules/lambda"
   name_prefix = "wordpress-operations"
   lambda_source_base = local.lambda_source_base
-  function = local.lambda
+  function = local.checks
 }
 
 # Creating IAM role for State Machine 
