@@ -2,6 +2,7 @@ locals {
   checks = {
     "replica-failover-handler" = {
       timeout = 300
+      role_arn = data.terraform_remote_state.iam.outputs.lambda_failover_role_arn
       layer = false
       environment = {
         DR_REGION                   = var.dr_region
@@ -12,6 +13,7 @@ locals {
 
     "service-recovery-handler" = {
       timeout = 300
+      role_arn = data.terraform_remote_state.iam.outputs.lambda_failover_role_arn
       layer = false
       environment = {
         DR_REGION        = var.dr_region
@@ -23,6 +25,7 @@ locals {
 
     "validate-db-writable" = {
       timeout = 60
+      role_arn = data.terraform_remote_state.iam.outputs.lambda_failover_role_arn
       layer = true
       environment = {
         DB_SECRET_ARN      = data.terraform_remote_state.dr_rds.outputs.wordpress_secret_arn
@@ -33,6 +36,7 @@ locals {
 
     "validate-application" = {
       timeout = 30
+      role_arn = data.terraform_remote_state.iam.outputs.lambda_failover_role_arn
       layer = false
       environment = {
         APP_HEALTHCHECK_URL     = var.app_healthcheck.path
