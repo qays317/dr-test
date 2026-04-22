@@ -1,40 +1,10 @@
 {
-  "Comment": "DR failover orchestrator for multi-region ECS + RDS",
-  "StartAt": "CheckReplicaReadiness",
+  "Comment": "DR failover orchestrator",
+  "StartAt": "ReplicaFailoverHandler",
   "States": {
-    "CheckReplicaReadiness": {
+    "ReplicaFailoverHandler": {
       "Type": "Task",
-      "Resource": "${check_replica_readiness_lambda_arn}",
-      "Next": "ReplicaReady?"
-    },
-    "ReplicaReady?": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.replica_ready",
-          "BooleanEquals": true,
-          "Next": "PromoteReplica"
-        }
-      ],
-      "Default": "FailReplicaNotReady"
-    },
-    "FailReplicaNotReady": {
-      "Type": "Fail",
-      "Cause": "DR replica is not ready for promotion"
-    },
-    "PromoteReplica": {
-      "Type": "Task",
-      "Resource": "${promote_replica_lambda_arn}",
-      "Next": "WaitForDBPromotion"
-    },
-    "WaitForDBPromotion": {
-      "Type": "Wait",
-      "Seconds": 30,
-      "Next": "CheckDBAvailable"
-    },
-    "CheckDBAvailable": {
-      "Type": "Task",
-      "Resource": "${check_db_available_lambda_arn}",
+      "Resource": "${replica_failover_handler_lambda_arn}",
       "Next": "DBAvailable?"
     },
     "DBAvailable?": {
@@ -46,7 +16,11 @@
           "Next": "ValidateDBWritable"
         }
       ],
-      "Default": "WaitForDBPromotion"
+      "Default": "FailReplicaFailover"
+    },
+    "FailReplicaFailover": {
+      "Type": "Fail",
+      "Cause": "Replica failover handler failed"
     },
     "ValidateDBWritable": {
       "Type": "Task",
@@ -59,7 +33,7 @@
         {
           "Variable": "$.db_writable",
           "BooleanEquals": true,
-          "Next": "ScaleUpDRService"
+          "Next": "ServiceRecoveryHandler"
         }
       ],
       "Default": "FailDBNotWritable"
@@ -68,19 +42,9 @@
       "Type": "Fail",
       "Cause": "Promoted database is not writable"
     },
-    "ScaleUpDRService": {
+    "ServiceRecoveryHandler": {
       "Type": "Task",
-      "Resource": "${scaleup_dr_service_lambda_arn}",
-      "Next": "WaitForECSStartup"
-    },
-    "WaitForECSStartup": {
-      "Type": "Wait",
-      "Seconds": 30,
-      "Next": "CheckECSHealthy"
-    },
-    "CheckECSHealthy": {
-      "Type": "Task",
-      "Resource": "${check_ecs_healthy_lambda_arn}",
+      "Resource": "${service_recovery_handler_lambda_arn}",
       "Next": "ECSHealthy?"
     },
     "ECSHealthy?": {
@@ -92,7 +56,11 @@
           "Next": "ValidateApplication"
         }
       ],
-      "Default": "WaitForECSStartup"
+      "Default": "FailServiceRecovery"
+    },
+    "FailServiceRecovery": {
+      "Type": "Fail",
+      "Cause": "Service recovery handler failed"
     },
     "ValidateApplication": {
       "Type": "Task",
