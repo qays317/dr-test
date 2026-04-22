@@ -1,21 +1,3 @@
-variable "project_name" {
-  description = "Project name prefix"
-  type        = string
-  default     = "wordpress-dr"
-}
-
-variable "environment" {
-  description = "Environment name"
-  type        = string
-  default     = "prod"
-}
-
-variable "aws_region" {
-  description = "Region where orchestration resources will be created"
-  type        = string
-  default = "eu-central-1"
-}
-
 variable "rds_replica_identifier" {
   description = "RDS read replica identifier in DR region"
   type        = string
