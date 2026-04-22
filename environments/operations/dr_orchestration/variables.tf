@@ -25,19 +25,6 @@ variable "ecs" {
 
 variable "app_healthcheck" {
   type = object({
-    path        = string
-    timeout     = number
-    status_code = number
-  })
-  default = {
-    path        = "/"
-    timeout     = 10
-    status_code = 200
-  }
-}
-
-variable "app_healthcheck" {
-  type = object({
     path         = string
     timeout      = number
     status_code  = number
