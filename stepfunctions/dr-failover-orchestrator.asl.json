@@ -19,13 +19,13 @@
         }
       ],
       "Default": "FailReplicaFailover"
-    }
+    },
 
     "WaitForDBReadiness": {
       "Type": "Wait",
       "Seconds": 30,
       "Next": "ValidateDBWritable"
-    }
+    },
     
     "FailReplicaFailover": {
       "Type": "Fail",
