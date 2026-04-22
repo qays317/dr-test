@@ -15,12 +15,18 @@
         {
           "Variable": "$.replica.db_available",
           "BooleanEquals": true,
-          "Next": "ValidateDBWritable"
+          "Next": "WaitForDBReadiness"
         }
       ],
       "Default": "FailReplicaFailover"
-    },
+    }
 
+    "WaitForDBReadiness": {
+      "Type": "Wait",
+      "Seconds": 30,
+      "Next": "ValidateDBWritable"
+    }
+    
     "FailReplicaFailover": {
       "Type": "Fail",
       "Cause": "Replica failover handler failed"
