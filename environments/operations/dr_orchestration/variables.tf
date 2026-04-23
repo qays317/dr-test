@@ -35,7 +35,7 @@ variable "app_healthcheck" {
     status_code  = number
   })
   default = {
-    path        = "rqays.com"
+    path        = "https://rqays.com"
     timeout     = 10
     status_code = 200
   }
