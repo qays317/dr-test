@@ -30,7 +30,7 @@ locals {
         vpc_config = {
           subnet_ids = data.terraform_remote_state.dr_network.outputs.private_subnets_ids
           security_group_ids = [
-            data.terraform_remote_state.dr_network.outputs.validate_db_writable_lambda_sg_id
+            data.terraform_remote_state.dr_network.outputs.lambda_validate_db_writable_sg_id
           ]
         }
       environment = {
