@@ -96,7 +96,6 @@ STACK_VARS["dr/ecs"]+=" -var ecs_service_name=$ECS_SERVICE_NAME"
 deploy_stack "primary/ecs"
 deploy_stack "dr/ecs"
 
-# Update S3 bucket policy after ECS
 ECS_TASK_ROLE_ARN=$(terraform -chdir="environments/global/iam" output -raw ecs_task_role_arn)
 CLOUDFRONT_DISTRIBUTION_ARN=$(terraform -chdir="environments/global/cdn_dns" output -raw cloudfront_distribution_arn)
 
