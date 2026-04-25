@@ -3,7 +3,7 @@ data "aws_route_tables" "private" {
   vpc_id = var.vpc_id
   filter {
     name = "tag:Name"
-    values = ["*private*", "*Private*"]
+    values = ["*private*", "*Private*", "prv*", "Prv*"]
   }
 }
 
