@@ -12,3 +12,7 @@ variable "vpc_endpoints" {
     security_group_id = optional(string)
   }))
 }
+
+variable "private_route_table_id" {
+  type = string
+}
